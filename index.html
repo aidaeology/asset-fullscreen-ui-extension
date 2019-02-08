@@ -21,6 +21,7 @@
         
         img#preview {
             height: 100%;
+            min-width: 800px;
             width: 100%;
         }
         
@@ -72,6 +73,7 @@
         const imageContainer = document.querySelector(".imageContainer");
         const goFS = document.querySelector("#goFS");
         const exitFS = document.querySelector("#exitFS");
+        const imgPreview = document.querySelector("#preview");
         const client = contentfulManagement.createClient({
             accessToken: '<INSERT_CMA_TOKEN_HERE>'
         });
@@ -101,9 +103,10 @@
                         // such as a PDF or PPT, then you must check asset.fields.file[].contentType
                         // in order to determine which HTML element type to use.
                         const imageURL = asset.fields.file['en-US'].url;
-                        document.getElementById("preview").src = imageURL;
-                        document.getElementById("preview").width = "100%";
-                        document.getElementById("preview").height = "100%";
+                        imgPreview.addEventListener('load', function() {
+                          api.window.updateHeight();
+                        }, false);
+                        imgPreview.src = imageURL;
                         openBtn.href = imageURL;
                     })
                     .catch(console.error);
