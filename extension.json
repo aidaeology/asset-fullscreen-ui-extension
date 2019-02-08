@@ -1,0 +1,6 @@
+{
+  "id": "asset FS",
+  "name": "Asset Full Screen",
+  "srcdoc": "index.html",
+  "fieldTypes": ["Object"]
+}
