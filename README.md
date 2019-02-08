@@ -7,5 +7,5 @@ This UI extension is designed to be used with  [Contentful](http://www.contentfu
 
 1. Install this UI Extension in your Contentful space!
 2. Update the SPACE_ID and CMA_TOKEN in the extension source (html). Don't forget to save!
-2. Create a field on your content type called "Asset", set type to "Link" and set linkType to "Asset".
+2. Create a field on your content type called "Asset", set type to Media (a.k.a. asset reference or link).
 3. Create a anotehr field on the same content type called "Asset Preview" of type "Object" and configure the field appearance to use this UI Extension, called: "Asset Full Screen".
