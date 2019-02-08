@@ -1,140 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Custom Asset Full Screen/Full Size UI Extension</title>
-    <meta charset="utf-8">
-	<head> 
-  	// CONTENTFUL JS CLIENTS
-	<script src="https://unpkg.com/contentful-ui-extensions-sdk@3"></script>
-	<script src="https://cdn.jsdelivr.net/npm/contentful-management@latest/dist/contentful-management.browser.min.js"></script>
-  
-  	// MATERIAL DESIGN COMPONENTS
-  	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  	<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
-  
-	<style>
-		nav#navbar {
-			background-color: rgb(0,0,0,0.25);
-			height: 45px;
-			position: absolute;
-			vertical-align: middle;
-			width: 100%;
-		}
+    <title>Custom Asset Full Screen/Full Size UI Extension</title>
+    <meta charset="utf-8"> // CONTENTFUL JS CLIENTS
+    <script src="https://unpkg.com/contentful-ui-extensions-sdk@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/contentful-management@latest/dist/contentful-management.browser.min.js"></script>
 
-		img#preview {
-			height:100%;
-		  	width:100%;
-		}
+    // MATERIAL DESIGN COMPONENTS
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
 
-		a#openNew i {
-			font-size: 20px;
-		}
-
-		a.fs-btn,
-		a.fs-btn i {
-			height: 45px;
-		  	line-height: 48px;
-		}
-
-		.hide {
-			display: none;
-		}
-	</style>
+    <style>
+        nav#navbar {
+            background-color: rgb(0, 0, 0, 0.25);
+            height: 45px;
+            position: absolute;
+            vertical-align: middle;
+            width: 100%;
+        }
+        
+        img#preview {
+            height: 100%;
+            width: 100%;
+        }
+        
+        a#openNew i {
+            font-size: 20px;
+        }
+        
+        a.fs-btn,
+        a.fs-btn i {
+            height: 45px;
+            line-height: 48px;
+        }
+        
+        .hide {
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
-	<div class="imageContainer">
-		<nav id="navbar">
-			<div class="nav-wrapper">
-				<ul class="right">
-					<li>
-						<a id="openNew" class="fs-btn" target="_blank">
-							<i class="material-icons">open_in_new</i>
-						</a>
-					</li>
-					<li>
-						<a id="goFS" class="fs-btn">
-							<i class="material-icons">fullscreen</i>
-						</a>
-					</li>
-					<li>
-						<a id="exitFS" class="fs-btn hide">
-							<i class="material-icons">fullscreen_exit</i>
-						</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
-		<img id="preview" />
-	</div>
-	
-	<script>
-		'use strict';
-		
-		const imageContainer = document.querySelector(".imageContainer");
-		const goFS = document.querySelector("#goFS");
-		const exitFS = document.querySelector("#exitFS");
-		const client = contentfulManagement.createClient({
-			accessToken: '<INSERT_CMA_TOKEN_HERE>'
-		});
+    <div class="imageContainer">
+        <nav id="navbar">
+            <div class="nav-wrapper">
+                <ul class="right">
+                    <li>
+                        <a id="openNew" class="fs-btn" target="_blank">
+                            <i class="material-icons">open_in_new</i>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="goFS" class="fs-btn">
+                            <i class="material-icons">fullscreen</i>
+                        </a>
+                    </li>
+                    <li>
+                        <a id="exitFS" class="fs-btn hide">
+                            <i class="material-icons">fullscreen_exit</i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <img id="preview" />
+    </div>
 
-		// This is the main entry point for extensions.
-		// The extension API reference explains in detail what you can do with
-		// the 'api' object.
-		window.contentfulExtension.init(function(api) {
+    <script>
+        'use strict';
 
-			// Automatically adjust UI Extension size in the Web App.
-			api.window.startAutoResizer();
+        const imageContainer = document.querySelector(".imageContainer");
+        const goFS = document.querySelector("#goFS");
+        const exitFS = document.querySelector("#exitFS");
+        const client = contentfulManagement.createClient({
+            accessToken: '<INSERT_CMA_TOKEN_HERE>'
+        });
 
-			const assetId = api.entry.fields.asset.getValue().sys.id;
-			const openBtn = document.querySelector("#openNew");
+        // This is the main entry point for extensions.
+        // The extension API reference explains in detail what you can do with
+        // the 'api' object.
+        window.contentfulExtension.init(function(api) {
 
-			if (assetId !== null && assetId !== undefined) {
-				getAsset(assetId);
-			}
+            // Automatically adjust UI Extension size in the Web App.
+            api.window.startAutoResizer();
 
-			function getAsset(assetId) {    
-				client.getSpace('<SPACE_ID>')
-					.then((space) => space.getEnvironment('master'))
-					.then((environment) => environment.getAsset(assetId))
-					.then((asset) => {
-						// For this simple example, we're assuming all asset types are of image
-						// if you expect this extension to be used with other asset types
-						// such as a PDF or PPT, then you must check asset.fields.file[].contentType
-						// in order to determine which HTML element type to use.
-						const imageURL = asset.fields.file['en-US'].url;
-						document.getElementById("preview").src = imageURL;
-						document.getElementById("preview").width="100%";
-						document.getElementById("preview").height="100%";
-						openBtn.href = imageURL;
-				})
-				.catch(console.error);
-			}
-		});
+            const assetId = api.entry.fields.asset.getValue().sys.id;
+            const openBtn = document.querySelector("#openNew");
 
-		goFS.addEventListener("click", function() {
-		  imageContainer.requestFullscreen().then({}).catch(err => {
-			alert("Error attempting to enable full-screen mode: ${err.message} (${err.name})");
-		  });
-		}, false);
+            if (assetId !== null && assetId !== undefined) {
+                getAsset(assetId);
+            }
 
-		exitFS.addEventListener("click", function() {
-			document.exitFullscreen();
-		}, false);
+            function getAsset(assetId) {
+                client.getSpace('<SPACE_ID>')
+                    .then((space) => space.getEnvironment('master'))
+                    .then((environment) => environment.getAsset(assetId))
+                    .then((asset) => {
+                        // For this simple example, we're assuming all asset types are of image
+                        // if you expect this extension to be used with other asset types
+                        // such as a PDF or PPT, then you must check asset.fields.file[].contentType
+                        // in order to determine which HTML element type to use.
+                        const imageURL = asset.fields.file['en-US'].url;
+                        document.getElementById("preview").src = imageURL;
+                        document.getElementById("preview").width = "100%";
+                        document.getElementById("preview").height = "100%";
+                        openBtn.href = imageURL;
+                    })
+                    .catch(console.error);
+            }
+        });
 
-		document.onfullscreenchange = function (event) { 
-		  toggleFSButtons();
-		};
+        goFS.addEventListener("click", function() {
+            imageContainer.requestFullscreen().then({}).catch(err => {
+                alert("Error attempting to enable full-screen mode: ${err.message} (${err.name})");
+            });
+        }, false);
 
-		function toggleFSButtons() {
-		  if (document.fullscreenElement) {
-			goFS.classList.add("hide");
-			exitFS.classList.remove("hide");
-		  }
-		  else{
-			goFS.classList.remove("hide");
-			exitFS.classList.add("hide");
-		  }
-		}
-	</script>
+        exitFS.addEventListener("click", function() {
+            document.exitFullscreen();
+        }, false);
+
+        document.onfullscreenchange = function(event) {
+            toggleFSButtons();
+        };
+
+        function toggleFSButtons() {
+            if (document.fullscreenElement) {
+                goFS.classList.add("hide");
+                exitFS.classList.remove("hide");
+            } else {
+                goFS.classList.remove("hide");
+                exitFS.classList.add("hide");
+            }
+        }
+    </script>
 </body>
 </html>
