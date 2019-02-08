@@ -86,12 +86,25 @@
             // Automatically adjust UI Extension size in the Web App.
             api.window.startAutoResizer();
 
-            const assetId = api.entry.fields.asset.getValue().sys.id;
+          	const assetField = api.entry.fields.asset;
             const openBtn = document.querySelector("#openNew");
 
-            if (assetId !== null && assetId !== undefined) {
-                getAsset(assetId);
+            function valueChangeHandler (value) {
+            	updateAssetPreview();
             }
+          
+            function updateAssetPreview()  {
+                const assetId = assetField.getValue() ? assetField.getValue().sys.id : null;
+                if (assetId !== null && assetId !== undefined) {
+                    getAsset(assetId);
+                }
+                else {
+                    imageContainer.classList.add("hide");
+                }
+            }
+          
+          	// Callback for changes of the field value.
+          	var detachValueChangeHandler = assetField.onValueChanged(valueChangeHandler);
 
             function getAsset(assetId) {
                 client.getSpace('<SPACE_ID>')
@@ -107,6 +120,7 @@
                           api.window.updateHeight();
                         }, false);
                         imgPreview.src = imageURL;
+                  		imageContainer.classList.remove("hide");
                         openBtn.href = imageURL;
                     })
                     .catch(console.error);
